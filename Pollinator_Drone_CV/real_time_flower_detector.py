@@ -62,8 +62,8 @@ fps = FPS().start()
 while True:
     frame = vs.read()
     frame = imutils.resize(frame,width=400)
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    tframe = cv2.resize(frame, (IMG_SIZE,IMG_SIZE))
+    gframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    tframe = cv2.resize(gframe, (IMG_SIZE,IMG_SIZE))
     #gframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     #frame = cv2.resize(frame, (IMG_SIZE,IMG_SIZE))
     rframe = tframe.reshape(-1,IMG_SIZE,IMG_SIZE,1)
@@ -74,8 +74,13 @@ while True:
     if_closed_flower=np.argmax(pframe)
 
     #Frame print
-    label = "{}:{:}".format("Flower Status",if_closed_flower)
-    cv2.putText(frame, label, (10,10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 2)
+    if if_closed_flower == 0:
+        msg = "OPEN"
+    elif if_closed_flower == 1:
+        msg = "CLOSED"
+
+    label = "{}:{}".format("Flower Status",msg)
+    cv2.putText(frame, label, (10,280), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 2)
 
     #output frame
     cv2.imshow("Frame", frame)
