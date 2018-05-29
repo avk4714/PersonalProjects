@@ -70,6 +70,8 @@ while True:
     frame = vs.read()
     frame = imutils.resize(frame,width=400)
     gframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    ##cropped = image[70:170, 440:540]
+    ##cv2.imshow("cropped", cropped)
     tframe = cv2.resize(gframe, (IMG_SIZE,IMG_SIZE))
     rframe = tframe.reshape(-1,IMG_SIZE,IMG_SIZE,1)
     pframe = model.predict({'input': rframe})
