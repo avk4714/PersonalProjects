@@ -1,5 +1,13 @@
-# CSE 576 Project : Pollinator Drone flower detection algorithm with CNN
-# Description -
+# CSE 576 Project
+# [TITLE] : Pollinator Drone flower detection algorithm with CNN
+# [AUTHORS] : Melanie Anderson, Yogesh Chukewad, Aman Kalia
+# [DESCRIPTION] - The code applies real time detection and identification of
+# the state of a flower in the camera frame. These states are "OPEN", "CLOSED"
+# and "NOT DETECTED". These detections are feasible due to a CNN trained using
+# images of the tulip flower in both closed and open states. The model was
+# on the TensorFlow platform through Python. Inspiration for real time detection
+# was drawn from Adrian Rosebrock's work on Real Time Object detection with deep
+# neural network
 
 # Import packages
 
