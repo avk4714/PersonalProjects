@@ -1,5 +1,5 @@
-# CSE 576 Project : Pollinator Drone flower detector algorithm
-# Description :
+# CSE 576 Project : Pollinator Drone flower detection algorithm with CNN
+# Description -
 
 # Import packages
 
@@ -49,7 +49,6 @@ model = tflearn.DNN(convnet, tensorboard_verbose=3)
 print("[INFO] Loading CNN model ...")
 model.load('my_model.tflearn')
 
-    #path = '/home/aman/Documents/PersonalProjects/Pollinator_Drone_CV'
 
 # Gather live video stream
     # Initialize VideoStream
@@ -64,29 +63,26 @@ while True:
     frame = imutils.resize(frame,width=400)
     gframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     tframe = cv2.resize(gframe, (IMG_SIZE,IMG_SIZE))
-    #gframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #frame = cv2.resize(frame, (IMG_SIZE,IMG_SIZE))
     rframe = tframe.reshape(-1,IMG_SIZE,IMG_SIZE,1)
-        #img = cv2.imread('check2.jpg',0)
-        #img = cv2.resize(img, (IMG_SIZE,IMG_SIZE))
-        #test=img.reshape(-1,IMG_SIZE,IMG_SIZE,1)
     pframe = model.predict({'input': rframe})
     if_closed_flower=np.argmax(pframe)
 
-    #Frame print
-    if if_closed_flower == 0:
+    # Frame print
+    # output Message
+    if if_closed_flower == 0 and np.any(pframe[0] >= 0.82) == True:
         msg = "OPEN"
+    elif if_closed_flower == 0 and np.all(pframe[0] >= 0.82) == False:
+        msg = "NOT DETECTED"
     elif if_closed_flower == 1:
         msg = "CLOSED"
 
     label = "{}:{}".format("Flower Status",msg)
-    cv2.putText(frame, label, (10,280), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 2)
-
+    label2 = "{}:{}".format("Probability",pframe)
+    cv2.putText(frame, label, (5,260), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 128, 2)
+    #cv2.putText(frame, label2, (5,290), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 156, 2)
     #output frame
     cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
-    #print("[DETECTION RESULT]: {:}".format(if_closed_flower))
-    #exit loop if q is pressed
     if key == ord("q"):
         break
 
