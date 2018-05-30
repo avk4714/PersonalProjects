@@ -61,16 +61,24 @@ model.load('my_model.tflearn')
 # Gather live video stream
     # Initialize VideoStream
 print("[INFO] Starting video stream...")
-vs = VideoStream(src=0).start()
+vs = VideoStream(src=1).start() #src=0 : for stock webcam, src=1 for usb cam
 time.sleep(2.0)
 fps = FPS().start()
+
+# Region of interest
+startX = 150
+startY = 100
+endX = 250
+endY = 200
 
 # Capturing video Frame
 while True:
     frame = vs.read()
     frame = imutils.resize(frame,width=400)
     gframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    tframe = cv2.resize(gframe, (IMG_SIZE,IMG_SIZE))
+    cgframe = gframe[startY:endY, startX:endX]
+    ##cv2.imshow("cropped", cropped)
+    tframe = cv2.resize(cgframe, (IMG_SIZE,IMG_SIZE))
     rframe = tframe.reshape(-1,IMG_SIZE,IMG_SIZE,1)
     pframe = model.predict({'input': rframe})
     if_closed_flower=np.argmax(pframe)
@@ -86,10 +94,13 @@ while True:
 
     label = "{}:{}".format("Flower Status",msg)
     label2 = "{}:{}".format("Probability",pframe)
-    cv2.putText(frame, label, (5,260), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 128, 2)
+    cv2.putText(frame, label, (5,290), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 255, 2)
+    cv2.rectangle(frame, (startX, startY), (endX, endY),
+        128, 2)
     #cv2.putText(frame, label2, (5,290), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 156, 2)
     #output frame
     cv2.imshow("Frame", frame)
+    cv2.imshow("Cropped Frame", cgframe)
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
         break
