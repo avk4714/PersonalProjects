@@ -11,7 +11,7 @@ import cv2                 # working with, mainly resizing, images
       # dealing with arrays
 import os                  # dealing with directories
 from random import shuffle # mixing up or currently ordered data that might lead our network astray in training.
-from tqdm import tqdm
+from tqdm import tqdm 
 
 import tflearn
 from tflearn.layers.conv import conv_2d, max_pool_2d, avg_pool_2d
@@ -53,19 +53,20 @@ model = tflearn.DNN(convnet, tensorboard_verbose=3)
 
 
 #%%
-model.load('my_model.tflearn')
+model.load('/home/airlab/Desktop/Flowers/For_Melanie_updated/my_model.tflearn')
 
 
 #%%
 
-path = '/home/aman/Documents/PersonalProjects/Pollinator_Drone_CV'
 
-img = cv2.imread('check2.jpg',0)
+img = cv2.imread('/home/airlab/Desktop/Flowers/For_Melanie_updated/check.png',0)
+
+#%%
 img = cv2.resize(img, (IMG_SIZE,IMG_SIZE))
-
 test=img.reshape(-1,IMG_SIZE,IMG_SIZE,1)
 #%%
 a=model.predict({'input': test})
 if_closed_flower=np.argmax(a)
 
-print("[DETECTION RESULT]: {:}".format(if_closed_flower))
+#%%
+tf.reset_default_graph()
