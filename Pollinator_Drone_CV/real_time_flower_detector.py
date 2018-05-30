@@ -61,9 +61,10 @@ model.load('my_model.tflearn')
 # Gather live video stream
     # Initialize VideoStream
 print("[INFO] Starting video stream...")
-vs = VideoStream(src=1).start() #src=0 : for stock webcam, src=1 for usb cam
+vs = VideoStream(src=0).start() #src=0 : for stock webcam, src=1 for usb cam
 time.sleep(2.0)
 fps = FPS().start()
+#savframe = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640,480))
 
 # Region of interest
 startX = 150
@@ -85,22 +86,23 @@ while True:
 
     # Frame print
     # output Message
-    if if_closed_flower == 0 and np.any(pframe[0] >= 0.82) == True:
+    if if_closed_flower == 0 and np.any(pframe[0] >= 0.73) == True:
         msg = "OPEN"
-    elif if_closed_flower == 0 and np.all(pframe[0] >= 0.82) == False:
+    elif if_closed_flower == 0 and np.all(pframe[0] >= 0.73) == False:
         msg = "NOT DETECTED"
     elif if_closed_flower == 1:
         msg = "CLOSED"
 
     label = "{}:{}".format("Flower Status",msg)
     label2 = "{}:{}".format("Probability",pframe)
-    cv2.putText(frame, label, (5,290), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 255, 2)
-    cv2.rectangle(frame, (startX, startY), (endX, endY),
-        128, 2)
-    #cv2.putText(frame, label2, (5,290), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 156, 2)
+    cv2.putText(frame, label, (5,260), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 255, 2)
+    cv2.rectangle(frame, (startX, startY), (endX, endY),128, 2)
+    cv2.putText(frame, label2, (5,290), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 156, 2)
     #output frame
+
     cv2.imshow("Frame", frame)
     cv2.imshow("Cropped Frame", cgframe)
+    savframe.write(frame)
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
         break
@@ -110,6 +112,8 @@ while True:
 
 fps.stop()
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
+
 # Clean Up
 cv2.destroyAllWindows()
 vs.stop()
+#savframe.release()
